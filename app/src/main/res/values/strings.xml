@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">GPUImageDemo</string>
+
+    <!-- MainActivity-->
+    <string name="main_camera">Camera</string>
+    <string name="main_gallery">Gallery</string>
+    <string name="main_permission_hint">Please Open Permission</string>
+
+    <!-- Common-->
+    <string name="choose_filter">Choose Filter</string>
 </resources>
