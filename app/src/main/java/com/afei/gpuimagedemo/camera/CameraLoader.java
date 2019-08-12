@@ -14,6 +14,8 @@ public abstract class CameraLoader {
 
     public abstract boolean hasMultipleCamera();
 
+    public abstract boolean isFrontCamera();
+
     public void setOnPreviewFrameListener(OnPreviewFrameListener onPreviewFrameListener) {
         mOnPreviewFrameListener = onPreviewFrameListener;
     }

@@ -112,6 +112,11 @@ public class Camera2Loader extends CameraLoader {
         return false;
     }
 
+    @Override
+    public boolean isFrontCamera() {
+        return mCameraFacing == CameraCharacteristics.LENS_FACING_FRONT;
+    }
+
     @SuppressLint("MissingPermission")
     private void setUpCamera() {
         try {

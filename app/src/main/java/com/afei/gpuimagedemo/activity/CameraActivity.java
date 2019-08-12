@@ -62,10 +62,23 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
                 mGPUImageView.updatePreviewFrame(data, width, height);
             }
         });
-        mCameraLoader.getCameraOrientation();
-        mGPUImageView.setRatio(0.75f);
-        mGPUImageView.setRotation(getRotation(mCameraLoader.getCameraOrientation()));
+        mGPUImageView.setRatio(0.75f); // 固定使用 4:3 的尺寸
+        updateGPUImageRotate();
         mGPUImageView.setRenderMode(GPUImageView.RENDERMODE_CONTINUOUSLY);
+    }
+
+    private void updateGPUImageRotate() {
+        Rotation rotation = getRotation(mCameraLoader.getCameraOrientation());
+        boolean flipHorizontal = false;
+        boolean flipVertical = false;
+        if (mCameraLoader.isFrontCamera()) { // 前置摄像头需要镜像
+            if (rotation == Rotation.NORMAL || rotation == Rotation.ROTATION_180) {
+                flipHorizontal = true;
+            } else {
+                flipVertical = true;
+            }
+        }
+        mGPUImageView.getGPUImage().setRotation(rotation, flipHorizontal, flipVertical);
     }
 
     @Override
@@ -105,7 +118,7 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
                 break;
             case R.id.switch_camera_iv:
                 mCameraLoader.switchCamera();
-                mGPUImageView.setRotation(getRotation(mCameraLoader.getCameraOrientation()));
+                updateGPUImageRotate();
                 break;
         }
     }
