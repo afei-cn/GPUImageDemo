@@ -117,6 +117,7 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
                 saveSnapshot();
                 break;
             case R.id.switch_camera_iv:
+                mGPUImageView.getGPUImage().deleteImage();
                 mCameraLoader.switchCamera();
                 updateGPUImageRotate();
                 break;

@@ -157,6 +157,7 @@ public class Camera2Loader extends CameraLoader {
 
     private void startCaptureSession() {
         Size size = chooseOptimalSize();
+        Log.d(TAG, "size: " + size.toString());
         mImageReader = ImageReader.newInstance(size.getWidth(), size.getHeight(), ImageFormat.YUV_420_888, 2);
         mImageReader.setOnImageAvailableListener(new ImageReader.OnImageAvailableListener() {
             @Override
@@ -247,6 +248,8 @@ public class Camera2Loader extends CameraLoader {
             try {
                 CaptureRequest.Builder builder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
                 builder.addTarget(mImageReader.getSurface());
+                builder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+                builder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
                 session.setRepeatingRequest(builder.build(), null, null);
             } catch (CameraAccessException e) {
                 e.printStackTrace();
