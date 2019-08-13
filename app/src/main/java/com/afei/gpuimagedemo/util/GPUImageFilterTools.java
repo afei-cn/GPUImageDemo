@@ -117,7 +117,7 @@ public class GPUImageFilterTools {
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Choose a filter");
+        builder.setTitle(context.getString(R.string.choose_filter));
         builder.setItems(filters.names.toArray(new String[filters.names.size()]),
                 new DialogInterface.OnClickListener() {
                     @Override
