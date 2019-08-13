@@ -20,10 +20,10 @@ implementation 'jp.co.cyberagent.android:gpuimage:2.0.3'
 ## 四、GPUImage 类介绍
 ### 1. 目录结构
 
-|--- filter ： 这个包下面是各种滤镜效果类。
-|--- util ： 这个包下面是一些工具类。
-|--- GLTextureView ： 继承自 TextureView，和 GLSurfaceView 功能类似。
-|--- GPUImage ： 核心实现类，配合 GLSurfaceView/GLTextureView 和 GPUImageFilter 实现渲染。
-|--- GPUImageNativeLibrary ： 包含一些图片转码的 native 方法。
-|--- GPUImageRenderer ： 实际的渲染者。
+|--- filter ： 这个包下面是各种滤镜效果类。  
+|--- util ： 这个包下面是一些工具类。  
+|--- GLTextureView ： 继承自 TextureView，和 GLSurfaceView 功能类似。  
+|--- GPUImage ： 核心实现类，配合 GLSurfaceView/GLTextureView 和 GPUImageFilter 实现渲染。  
+|--- GPUImageNativeLibrary ： 包含一些图片转码的 native 方法。  
+|--- GPUImageRenderer ： 实际的渲染者。  
 |--- GPUImageView ： 继承自 FrameLayout，封装了一个 GPUImage 和 GPUImageFilter，使用起来更方便。
