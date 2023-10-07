@@ -1,39 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@android:color/black"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="?android:actionBarSize"
+        android:background="@color/colorPrimary"
+        app:contentInsetStart="0dp">
 
-        <ImageView
-            android:id="@+id/close_iv"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:padding="8dp"
-            android:src="@mipmap/ic_close"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
 
-        <ImageView
-            android:id="@+id/switch_camera_iv"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:padding="8dp"
-            android:src="@mipmap/ic_switch_camera"/>
+            <ImageView
+                android:id="@+id/close_iv"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:padding="10dp"
+                android:src="@mipmap/ic_close" />
 
-        <ImageView
-            android:id="@+id/compare_iv"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="10dp"
-            android:padding="8dp"
-            android:src="@mipmap/ic_compare"/>
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/switch_camera_iv"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_centerInParent="true"
+                android:padding="10dp"
+                android:src="@mipmap/ic_switch_camera" />
+
+            <ImageView
+                android:id="@+id/compare_iv"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_alignParentRight="true"
+                android:padding="10dp"
+                android:src="@mipmap/ic_compare" />
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -44,7 +51,7 @@
             android:id="@+id/gpuimage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center" />
 
         <SeekBar
             android:id="@+id/tone_seekbar"
@@ -54,7 +61,7 @@
             android:background="#55ffffff"
             android:max="100"
             android:padding="10dp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </FrameLayout>
 
@@ -72,7 +79,7 @@
             android:layout_centerInParent="true"
             android:text="@string/choose_filter"
             android:textColor="@android:color/white"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
         <ImageView
             android:id="@+id/save_iv"
@@ -81,7 +88,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:padding="5dp"
-            android:src="@mipmap/ic_ok"/>
+            android:src="@mipmap/ic_ok" />
     </RelativeLayout>
 
 </LinearLayout>

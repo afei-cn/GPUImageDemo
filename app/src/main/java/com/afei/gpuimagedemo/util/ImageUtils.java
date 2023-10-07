@@ -1,9 +1,16 @@
 package com.afei.gpuimagedemo.util;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
+import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.media.ExifInterface;
 import android.media.Image;
+import android.net.Uri;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 public class ImageUtils {
@@ -60,5 +67,45 @@ public class ImageUtils {
             }
         }
         return data;
+    }
+
+    public static Bitmap rotateBitmap(Bitmap bitmap, int rotation) {
+        if (rotation == 0) {
+            return bitmap;
+        }
+        return rotateResizeBitmap(bitmap, rotation, 1f);
+    }
+
+    public static Bitmap rotateResizeBitmap(Bitmap source, float angle, float scale) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        if (scale != 1f) {
+            matrix.setScale(scale, scale);
+        }
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
+    public static int getRotation(Context context, Uri imageUri) {
+        if (imageUri == null) {
+            return 0;
+        }
+        ExifInterface ei;
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(imageUri);
+            ei = new ExifInterface(inputStream);
+        } catch (IOException e) {
+            return 0;
+        }
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                return 90;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return 180;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return 270;
+            default:
+                return 0;
+        }
     }
 }

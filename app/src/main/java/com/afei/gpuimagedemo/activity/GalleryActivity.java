@@ -1,9 +1,10 @@
 package com.afei.gpuimagedemo.activity;
 
-import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -11,17 +12,23 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
+
 import com.afei.gpuimagedemo.R;
 import com.afei.gpuimagedemo.util.FileUtils;
 import com.afei.gpuimagedemo.util.GPUImageFilterTools;
 import com.afei.gpuimagedemo.util.GPUImageFilterTools.OnGpuImageFilterChosenListener;
+import com.afei.gpuimagedemo.util.ImageUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 import jp.co.cyberagent.android.gpuimage.GPUImageView;
 import jp.co.cyberagent.android.gpuimage.filter.GPUImageFilter;
 
 public class GalleryActivity extends BaseActivity implements View.OnClickListener {
-
-    private static final int REQUEST_PICK_IMAGE = 0x001;
 
     private GPUImageView mGPUImageView;
     private SeekBar mSeekBar;
@@ -30,6 +37,8 @@ public class GalleryActivity extends BaseActivity implements View.OnClickListene
     private GPUImageFilter mNoImageFilter = new GPUImageFilter();
     private GPUImageFilter mCurrentImageFilter = mNoImageFilter;
     private GPUImageFilterTools.FilterAdjuster mFilterAdjuster;
+
+    private ActivityResultLauncher<String> mGalleryLauncher;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,6 +58,9 @@ public class GalleryActivity extends BaseActivity implements View.OnClickListene
         findViewById(R.id.compare_iv).setOnTouchListener(mOnTouchListener);
         findViewById(R.id.close_iv).setOnClickListener(this);
         findViewById(R.id.save_iv).setOnClickListener(this);
+        mGalleryLauncher = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                this::handleGalleryResult);
     }
 
     @Override
@@ -68,25 +80,35 @@ public class GalleryActivity extends BaseActivity implements View.OnClickListene
                 break;
         }
     }
+
+    private void handleGalleryResult(Uri imageUri) {
+        if (imageUri != null) {
+            try {
+                Log.w(TAG, "imageUri path: " + imageUri.getPath());
+                Bitmap selectedBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                Log.w(TAG, "selectedBitmap: " + selectedBitmap.getWidth() + ", " + selectedBitmap.getHeight());
+                int rotation = ImageUtils.getRotation(this, imageUri);
+                Bitmap rotatedBitmap = ImageUtils.rotateBitmap(selectedBitmap, rotation);
+                Log.w(TAG, "rotatedBitmap: " + rotatedBitmap.getWidth() + ", " + rotatedBitmap.getHeight());
+
+                mGPUImageView.setRatio(rotatedBitmap.getWidth() * 1f / rotatedBitmap.getHeight()); // 设置正确的比例才能更好的显示
+                mGPUImageView.setImage(rotatedBitmap);
+                mGPUImageView.setFilter(mCurrentImageFilter);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     private void openGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, REQUEST_PICK_IMAGE);
+        if (mGalleryLauncher != null) {
+            mGalleryLauncher.launch("image/*");
+        }
     }
 
     private void saveImage() {
         String fileName = System.currentTimeMillis() + ".jpg";
         mGPUImageView.saveToPictures("GPUImage", fileName, mOnPictureSavedListener);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == REQUEST_PICK_IMAGE && resultCode == RESULT_OK && data!= null) {
-            mGPUImageView.setImage(data.getData());
-            mGPUImageView.setFilter(mCurrentImageFilter);
-            return;
-        }
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private View.OnTouchListener mOnTouchListener = new View.OnTouchListener() {

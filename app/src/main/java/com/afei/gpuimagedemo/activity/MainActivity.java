@@ -1,20 +1,21 @@
 package com.afei.gpuimagedemo.activity;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Toast;
 
-import com.afei.gpuimagedemo.R;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import com.afei.gpuimagedemo.R;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener{
 
@@ -33,8 +34,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     }
 
     private void initView() {
-        findViewById(R.id.main_camera_btn).setOnClickListener(this);
-        findViewById(R.id.main_gallery_btn).setOnClickListener(this);
+        findViewById(R.id.camera_layout).setOnClickListener(this);
+        findViewById(R.id.gallery_layout).setOnClickListener(this);
     }
 
     private boolean checkPermission() {
@@ -49,34 +50,33 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_PERMISSION) {
-            if (grantResults[0] != PERMISSION_GRANTED) {
-                Toast.makeText(this, R.string.main_permission_hint, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                Uri uri = Uri.fromParts("package", getPackageName(), null);
-                intent.setData(uri);
-                startActivityForResult(intent, REQUEST_PERMISSION);
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] != PERMISSION_GRANTED) {
+                    Toast.makeText(this, R.string.main_permission_hint, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri = Uri.fromParts("package", getPackageName(), null);
+                    intent.setData(uri);
+                    registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                        if (result.getResultCode() == RESULT_OK) {
+                            checkPermission();
+                        }
+                    }).launch(intent);
+                }
             }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == REQUEST_PERMISSION) {
-            //checkPermission();
         }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.main_camera_btn:
+            case R.id.camera_layout:
                 startActivity(new Intent(this, CameraActivity.class));
                 break;
-            case R.id.main_gallery_btn:
+            case R.id.gallery_layout:
                 startActivity(new Intent(this, GalleryActivity.class));
                 break;
         }

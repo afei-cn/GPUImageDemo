@@ -7,11 +7,11 @@
 
     <ImageView
         android:id="@+id/compare_iv"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_gravity="end"
         android:layout_margin="10dp"
-        android:padding="5dp"
+        android:padding="10dp"
         android:src="@mipmap/ic_compare"/>
 
     <FrameLayout
@@ -21,8 +21,8 @@
 
         <jp.co.cyberagent.android.gpuimage.GPUImageView
             android:id="@+id/gpuimage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"/>
 
         <SeekBar
